@@ -3,6 +3,7 @@ from telebot import types
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
+import pytz
 
 TOKEN = '6854903171:AAGoQ5C2FM-YQpuaFZGZxxeGDMlAXgzhIg8'
 bot = telebot.TeleBot(TOKEN)
@@ -97,7 +98,8 @@ def add_to_spreadsheet(user_id):
         data_sheet.update(str(user_index), existing_row)
         data_sheet.format('B:B', {'numberFormat': {'type': 'DATE_TIME'}})
     else:
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        tz = pytz.timezone('Asia/Tashkent')
+        timestamp = datetime.now(tz).strftime("%Y-%m-%d %H:%M:%S")
         name = user_data[user_id].get('name', '')
         phone = user_data[user_id].get('phone', '')
         file_sent = str(user_data[user_id].get('file_sent', 0))
