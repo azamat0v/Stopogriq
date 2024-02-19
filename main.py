@@ -24,6 +24,8 @@ def handle_start(message):
         user_data[user_id] = {'start_count': 0}
 
     user_data[user_id]['start_count'] += 1
+    username = message.from_user.username
+    user_data[user_id]['username'] = username if username else "Username yo'q"
 
     bot.send_message(user_id, "Assalomu alaykum! Iltimos ismingizni kiriting:")
     bot.register_next_step_handler(message, handle_name)
