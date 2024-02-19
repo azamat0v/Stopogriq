@@ -86,14 +86,16 @@ def add_to_spreadsheet(user_id):
 
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         name = user_data[user_id].get('name', '')
+        username = user_data[user_id].get('username', '')
         phone = user_data[user_id].get('phone', '')
         file_sent = str(user_data[user_id].get('file_sent', 0))
 
         existing_row[0] = str(user_id)
         existing_row[1] = timestamp
         existing_row[2] = name
-        existing_row[3] = phone
-        existing_row[4] = file_sent
+        existing_row[3] = username
+        existing_row[4] = phone
+        existing_row[5] = file_sent
 
         data_sheet.update(str(user_index), existing_row)
         data_sheet.format('B:B', {'numberFormat': {'type': 'DATE_TIME'}})
@@ -101,10 +103,11 @@ def add_to_spreadsheet(user_id):
         tz = pytz.timezone('Asia/Tashkent')
         timestamp = datetime.now(tz).strftime("%Y-%m-%d %H:%M:%S")
         name = user_data[user_id].get('name', '')
+        username = user_data[user_id].get('username', '')
         phone = user_data[user_id].get('phone', '')
         file_sent = str(user_data[user_id].get('file_sent', 0))
 
-        new_row = [str(user_id), timestamp, name, phone, file_sent]
+        new_row = [str(user_id), timestamp, name, username, phone, file_sent]
         data_sheet.append_row(new_row)
         data_sheet.format('B:B', {'numberFormat': {'type': 'DATE_TIME'}})
 
