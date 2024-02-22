@@ -50,6 +50,7 @@ def create_file_button():
 def handle_file(message):
     user_id = message.from_user.id
     user_data[user_id]['file_sent'] = 1
+    user_data[user_id]['file_sent_time'] = datetime.now()
     send_all_information(user_id)
     remove_file_button(user_id)
     with open('file.pdf', 'rb') as f:
@@ -90,6 +91,11 @@ def add_to_spreadsheet(user_id):
         data_sheet.append_row(new_row)
         data_sheet.format('B:B', {'numberFormat': {'type': 'DATE_TIME'}})
 def send_all_information(user_id):
+    elapsed_time = datetime.now() - user_data[user_id].get('contact_sent_time', datetime.now())
+    if 'contact_sent' in user_data[user_id] and user_data[user_id]['contact_sent'] == 1 and elapsed_time > timedelta(minutes=1):
+        # The user shared contact but didn't click "Send File" within 1 minute
+        user_data[user_id]['file_sent'] = 0
+
     add_to_spreadsheet(user_id)
     del user_data[user_id]
 bot.polling(none_stop=True)
