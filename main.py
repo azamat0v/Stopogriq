@@ -40,23 +40,17 @@ def handle_name(message):
 
     bot.send_message(user_id, "Kontaktingizni yuboring:", reply_markup=markup)
     bot.register_next_step_handler(message, handle_contact)
-@bot.message_handler(func=lambda message: True)
+
 def handle_contact(message):
     user_id = message.from_user.id
+    user_data[user_id]['name'] = message.text
 
-    if message.contact:
-        user_data[user_id]['phone'] = message.contact.phone_number
-        bot.send_message(user_id, "Faylni olish uchun pastdagi tugmani bosing👇:",
-                         reply_markup=create_file_button())
-    else:
-        bot.send_message(user_id, "Iltimos kontaktni ulashish tugmasini bosing.")
-        return
-
-def create_file_button():
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     item = types.KeyboardButton("📥 Yuklab olish", request_location=False)
     markup.add(item)
-    return markup
+
+    bot.send_message(user_id, "Faylni olish uchun pastdagi tugmani bosing👇:", reply_markup=markup)
+    bot.register_next_step_handler(message, handle_file)
 
 @bot.message_handler(func=lambda message: message.text == "📥 Yuklab olish")
 def handle_file(message):
