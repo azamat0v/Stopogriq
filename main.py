@@ -39,7 +39,7 @@ def handle_name(message):
 
     bot.send_message(user_id, "Kontaktingizni yuboring:", reply_markup=markup)
     bot.register_next_step_handler(message, handle_contact)
-
+@bot.message_handler(func=lambda message: True)
 def handle_contact(message):
     user_id = message.from_user.id
 
