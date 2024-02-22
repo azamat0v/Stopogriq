@@ -25,7 +25,7 @@ def handle_start(message):
     
     elapsed_time = datetime.now() - user_data[user_id].get('start_sent_time', datetime.now())
     if elapsed_time > timedelta(minutes=1):
-        send_all_information()
+        send_all_information(user_id)
 
     bot.send_message(user_id, "Assalomu alaykum! Iltimos ismingizni kiriting:")
     bot.register_next_step_handler(message, handle_name)
