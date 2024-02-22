@@ -55,20 +55,23 @@ def handle_contact(message):
 @bot.message_handler(func=lambda message: message.text == "📥 Yuklab olish")
 def handle_file(message):
     user_id = message.from_user.id
-    if message.text == "📥 Yuklab olish":
+
+    if 'file_sent' not in user_data[user_id] or user_data[user_id]['file_sent'] == 0:
+        # The file hasn't been sent yet
         user_data[user_id]['file_sent'] = 1
-        bot.register_next_step_handler(message, handle_file)
 
         with open('file.pdf', 'rb') as f:
             bot.send_document(user_id, f)
+
         remove_file_button(user_id)
         bot.send_message(user_id, "Qiziqish bildirganingiz uchun rahmat🙂")
 
-    
-    elif 'file_sent' in user_data[user_id] and user_data[user_id]['file_sent'] == 1:
-        elapsed_time = datetime.now() - user_data[user_id].get('file_sent_time', datetime.now())
-        if elapsed_time > timedelta(minutes=1):
-            user_data[user_id]['file_sent'] = 0
+        # Record the time the file was sent
+        user_data[user_id]['file_sent_time'] = datetime.now()
+
+        # Send all information to Google Sheets
+        send_all_information(user_id)
+
 
 def remove_file_button(user_id):
     markup = types.ReplyKeyboardRemove(selective=False)
