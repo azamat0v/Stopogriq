@@ -22,13 +22,12 @@ def handle_start(message):
 
     if user_id not in user_data:
         user_data[user_id] = {'start_count': 0}
+        user_data[user_id]['start_count'] += 1
+        username = message.from_user.username
+        user_data[user_id]['username'] = username if username else "Username yo'q"
 
-    user_data[user_id]['start_count'] += 1
-    username = message.from_user.username
-    user_data[user_id]['username'] = username if username else "Username yo'q"
-
-    bot.send_message(user_id, "Assalomu alaykum! Iltimos ismingizni kiriting:")
-    bot.register_next_step_handler(message, handle_name)
+        bot.send_message(user_id, "Assalomu alaykum! Iltimos ismingizni kiriting:")
+        bot.register_next_step_handler(message, handle_name)
 
 def handle_name(message):
     user_id = message.from_user.id
