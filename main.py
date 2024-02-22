@@ -24,7 +24,7 @@ def handle_start(message):
 
     bot.send_message(user_id, "Assalomu alaykum! Iltimos ismingizni kiriting:")
     bot.register_next_step_handler(message, handle_name)
-    def handle_name(message):
+def handle_name(message):
     user_id = message.from_user.id
     user_data[user_id]['name'] = message.text
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
