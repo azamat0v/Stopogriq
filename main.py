@@ -49,27 +49,12 @@ def create_file_button():
 @bot.message_handler(func=lambda message: message.text == "📥 Yuklab olish")
 def handle_file(message):
     user_id = message.from_user.id
-    if 'file_sent' not in user_data[user_id] or user_data[user_id]['file_sent'] == 0:
-        # The file hasn't been sent yet
-        user_data[user_id]['file_sent'] = 1
-
-        with open('file.pdf', 'rb') as f:
-            bot.send_document(user_id, f)
-
-        remove_file_button(user_id)
-        bot.send_message(user_id, "Qiziqish bildirganingiz uchun rahmat🙂")
-
-        # Record the time the file was sent
-        user_data[user_id]['file_sent_time'] = datetime.now()
-
-        # Send all information to Google Sheets
-        send_all_information(user_id)
-
-    elif user_data[user_id]['file_sent'] == 1:
-        # If the user clicks "Send File" again within a minute, set file_sent to 0
-        elapsed_time = datetime.now() - user_data[user_id].get('file_sent_time', datetime.now())
-        if elapsed_time < timedelta(minutes=1):
-            user_data[user_id]['file_sent'] = 0
+    user_data[user_id]['file_sent'] = 1
+    send_all_information(user_id)
+    remove_file_button(user_id)
+    with open('file.pdf', 'rb') as f:
+        bot.send_document(user_id, f)
+    bot.send_message(user_id, "Qiziqish bildirganingiz uchun rahmat🙂")
 def remove_file_button(user_id):
     markup = types.ReplyKeyboardRemove(selective=False)
     bot.send_message(user_id, "Fayl yuborildi!", reply_markup=markup)
