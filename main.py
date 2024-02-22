@@ -2,7 +2,7 @@ import telebot
 from telebot import types
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 
 TOKEN = '6854903171:AAGoQ5C2FM-YQpuaFZGZxxeGDMlAXgzhIg8'
