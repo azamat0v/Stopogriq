@@ -60,15 +60,20 @@ def create_file_button():
 @bot.message_handler(func=lambda message: message.text == "📥 Yuklab olish")
 def handle_file(message):
     user_id = message.from_user.id
-    user_data[user_id]['file_sent'] = 1
+    if message.text == "📥 Yuklab olish":
+        user_data[user_id]['file_sent'] = 1
+        bot.register_next_step_handler(message, handle_file)
 
-    send_all_information(user_id)
-    remove_file_button(user_id)
+        with open('file.pdf', 'rb') as f:
+            bot.send_document(user_id, f)
+        remove_file_button(user_id)
+        bot.send_message(user_id, "Qiziqish bildirganingiz uchun rahmat🙂")
 
-    with open('file.pdf', 'rb') as f:
-        bot.send_document(user_id, f)
-
-    bot.send_message(user_id, "Qiziqish bildirganingiz uchun rahmat🙂")
+    
+    elif 'file_sent' in user_data[user_id] and user_data[user_id]['file_sent'] == 1:
+        elapsed_time = datetime.now() - user_data[user_id].get('file_sent_time', datetime.now())
+        if elapsed_time > timedelta(minutes=1):
+            user_data[user_id]['file_sent'] = 0
 
 def remove_file_button(user_id):
     markup = types.ReplyKeyboardRemove(selective=False)
