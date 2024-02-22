@@ -15,12 +15,17 @@ user_data = {}
 @bot.message_handler(commands=['start'])
 def handle_start(message):
     user_id = message.from_user.id
+    user_data[user_id]['start_sent_time'] = datetime.now()
 
     if user_id not in user_data:
         user_data[user_id] = {'start_count': 0}
         user_data[user_id]['start_count'] += 1
     username = message.from_user.username
     user_data[user_id]['username'] = username if username else "Username yo'q"
+    
+    elapsed_time = datetime.now() - user_data[user_id].get('start_sent_time', datetime.now())
+    if elapsed_time > timedelta(minutes=1):
+        send_all_information()
 
     bot.send_message(user_id, "Assalomu alaykum! Iltimos ismingizni kiriting:")
     bot.register_next_step_handler(message, handle_name)
@@ -91,11 +96,6 @@ def add_to_spreadsheet(user_id):
         data_sheet.append_row(new_row)
         data_sheet.format('B:B', {'numberFormat': {'type': 'DATE_TIME'}})
 def send_all_information(user_id):
-    elapsed_time = datetime.now() - user_data[user_id].get('contact_sent_time', datetime.now())
-    if 'contact_sent' in user_data[user_id] and user_data[user_id]['contact_sent'] == 1 and elapsed_time > timedelta(minutes=1):
-        # The user shared contact but didn't click "Send File" within 1 minute
-        user_data[user_id]['file_sent'] = 0
-
     add_to_spreadsheet(user_id)
     del user_data[user_id]
 bot.polling(none_stop=True)
