@@ -39,41 +39,46 @@ def handle_name(message):
 
     bot.send_message(user_id, "Kontaktingizni yuboring:", reply_markup=markup)
     bot.register_next_step_handler(message, handle_contact)
-@bot.message_handler(func=lambda message: True)
+
 def handle_contact(message):
     user_id = message.from_user.id
+    user_data[user_id]['name'] = message.contact.first_name  # Use contact name
 
-    if message.contact:
-        user_data[user_id]['phone'] = message.contact.phone_number
-        bot.send_message(user_id, "Faylni olish uchun pastdagi tugmani bosing👇:",
-                         reply_markup=create_file_button())
-    else:
-        bot.send_message(user_id, "Iltimos kontaktni ulashish tugmasini bosing.")
-        return
-
-def create_file_button():
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     item = types.KeyboardButton("📥 Yuklab olish", request_location=False)
     markup.add(item)
-    return markup
+
+    bot.send_message(user_id, "Faylni olish uchun pastdagi tugmani bosing👇:", reply_markup=markup)
+    bot.register_next_step_handler(message, handle_file)
 
 @bot.message_handler(func=lambda message: message.text == "📥 Yuklab olish")
 def handle_file(message):
     user_id = message.from_user.id
-    if message.text == "📥 Yuklab olish":
+
+    if 'file_sent' not in user_data[user_id] or user_data[user_id]['file_sent'] == 0:
+        # The file hasn't been sent yet
         user_data[user_id]['file_sent'] = 1
-        bot.register_next_step_handler(message, handle_file)
 
         with open('file.pdf', 'rb') as f:
             bot.send_document(user_id, f)
+
         remove_file_button(user_id)
         bot.send_message(user_id, "Qiziqish bildirganingiz uchun rahmat🙂")
 
-    
-    elif 'file_sent' in user_data[user_id] and user_data[user_id]['file_sent'] == 1:
+        # Record the time the file was sent
+        user_data[user_id]['file_sent_time'] = datetime.now()
+
+        # Send all information to Google Sheets
+        send_all_information(user_id)
+    else:
         elapsed_time = datetime.now() - user_data[user_id].get('file_sent_time', datetime.now())
         if elapsed_time > timedelta(minutes=1):
             user_data[user_id]['file_sent'] = 0
+            send_all_information(user_id)
+
+        # bot.send_message(user_id, "You have already sent the file. If you want to send it again, click the button.")
+
+
 
 def remove_file_button(user_id):
     markup = types.ReplyKeyboardRemove(selective=False)
