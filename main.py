@@ -74,7 +74,7 @@ def remove_file_button(user_id):
     markup = types.ReplyKeyboardRemove(selective=False)
     bot.send_message(user_id, "Fayl yuborildi!", reply_markup=markup)
 
-def add_to_spreadsheet(user_id):
+def add_to_spreadsheet(user_id, action):
     gc = gspread.authorize(CREDENTIALS)
     spreadsheet = gc.open(GSHEET_NAME)
     data_sheet = spreadsheet.sheet1
