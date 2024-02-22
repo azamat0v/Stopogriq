@@ -43,7 +43,7 @@ def handle_name(message):
 
 def handle_contact(message):
     user_id = message.from_user.id
-    user_data[user_id]['name'] = message.text
+    user_data[user_id]['name'] = message.contact.first_name  # Use contact name
 
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     item = types.KeyboardButton("📥 Yuklab olish", request_location=False)
@@ -71,13 +71,21 @@ def handle_file(message):
 
         # Send all information to Google Sheets
         send_all_information(user_id)
+    else:
+        elapsed_time = datetime.now() - user_data[user_id].get('file_sent_time', datetime.now())
+        if elapsed_time > timedelta(minutes=1):
+            user_data[user_id]['file_sent'] = 0
+            send_all_information(user_id)
+
+        # bot.send_message(user_id, "You have already sent the file. If you want to send it again, click the button.")
+
 
 
 def remove_file_button(user_id):
     markup = types.ReplyKeyboardRemove(selective=False)
     bot.send_message(user_id, "Fayl yuborildi!", reply_markup=markup)
 
-def add_to_spreadsheet(user_id, action):
+def add_to_spreadsheet(user_id):
     gc = gspread.authorize(CREDENTIALS)
     spreadsheet = gc.open(GSHEET_NAME)
     data_sheet = spreadsheet.sheet1
