@@ -22,13 +22,12 @@ def handle_start(message):
         user_data[user_id]['start_count'] += 1
     username = message.from_user.username
     user_data[user_id]['username'] = username if username else "Username yo'q"
-    
-    elapsed_time = datetime.now() - user_data[user_id].get('start_sent_time', datetime.now())
-    if elapsed_time > timedelta(minutes=1):
-        send_all_information(user_id)
 
     bot.send_message(user_id, "Assalomu alaykum! Iltimos ismingizni kiriting:")
     bot.register_next_step_handler(message, handle_name)
+    elapsed_time = datetime.now() - user_data[user_id].get('start_sent_time', datetime.now())
+    if elapsed_time > timedelta(minutes=1):
+        send_all_information(user_id)
 def handle_name(message):
     user_id = message.from_user.id
     user_data[user_id]['name'] = message.text
