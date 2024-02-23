@@ -25,6 +25,7 @@ def handle_start(message):
     user_data[user_id]['start_sent_time'] = datetime.now()
     bot.send_message(user_id, "Assalomu alaykum! Iltimos ismingizni kiriting:")
     add_to_spreadsheet(user_id)
+    bot.register_next_step_handler(message, handle_name)
 
 # Remove the next step handler registration for handle_name
 
@@ -35,6 +36,7 @@ def handle_name(message, user_id):
     markup.add(item)
     bot.send_message(user_id, "Kontaktingizni yuboring:", reply_markup=markup)
     add_to_spreadsheet(user_id)
+    bot.register_next_step_handler(message, handle_contact)
 
 # Remove the next step handler registration for handle_contact
 
