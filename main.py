@@ -26,7 +26,6 @@ def handle_start(message):
     bot.send_message(user_id, "Assalomu alaykum! Iltimos ismingizni kiriting:")
     add_to_spreadsheet(user_id)
     bot.register_next_step_handler(message, lambda m: handle_name(m, user_id))
-    add_to_spreadsheet(handle_name)
 
 def handle_name(message, user_id):
     user_data[user_id]['name'] = message.text
@@ -35,6 +34,7 @@ def handle_name(message, user_id):
     markup.add(item)
     bot.send_message(user_id, "Kontaktingizni yuboring:", reply_markup=markup)
     bot.register_next_step_handler(message, lambda m: handle_contact(m, user_id))
+    add_to_spreadsheet('name')
 
 def handle_contact(message, user_id):
     if message.contact:
