@@ -26,6 +26,7 @@ def handle_start(message):
     if elapsed_time > timedelta(minutes=1):
         add_to_spreadsheet(user_id)
         del user_data[user_id]
+    add_to_spreedsheet(user_id)
 
     user_data[user_id]['start_sent_time'] = datetime.now()
     bot.send_message(user_id, "Assalomu alaykum! Iltimos ismingizni kiriting:")
