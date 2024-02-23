@@ -75,7 +75,7 @@ def handle_file(message):
 
 def remove_file_button(user_id):
     markup = types.ReplyKeyboardRemove(selective=False)
-    bot.send_message(user_id, "Fayl yuborildi!", reply_markup=markup)
+    bot.send_message(user_id, "Qiziqish bildirganingiz uchun rahmat🙂", reply_markup=markup)
 
 def add_to_spreadsheet(user_id):
     gc = gspread.authorize(CREDENTIALS)
