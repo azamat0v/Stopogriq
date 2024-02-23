@@ -21,11 +21,6 @@ def handle_start(message):
     if user_id not in user_data:
         user_data[user_id] = {'start_count': 0}
     user_data[user_id]['start_count'] += 1
-
-    elapsed_time = datetime.now() - user_data[user_id].get('start_sent_time', datetime.now())
-    if elapsed_time > timedelta(minutes=1):
-        add_to_spreadsheet(user_id)
-        del user_data[user_id]
     add_to_spreedsheet(user_id)
 
     user_data[user_id]['start_sent_time'] = datetime.now()
