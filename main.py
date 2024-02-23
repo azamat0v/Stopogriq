@@ -21,7 +21,7 @@ def handle_start(message):
     user_data[user_id]['start_sent_time'] = datetime.now()
 
     if user_id not in user_data:
-        user_data[user_id] = {'start_count': 0}
+        user_data[user_id] = {'start_count': 0, 'start_sent_time': datetime.now()}
         user_data[user_id]['start_count'] += 1
     username = message.from_user.username
     user_data[user_id]['username'] = username if username else "Username yo'q"
