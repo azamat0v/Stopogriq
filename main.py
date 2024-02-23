@@ -25,7 +25,8 @@ def handle_start(message):
     user_data[user_id]['start_sent_time'] = datetime.now()
     bot.send_message(user_id, "Assalomu alaykum! Iltimos ismingizni kiriting:")
     add_to_spreadsheet(user_id)
-    # bot.register_next_step_handler(message, lambda m: handle_name(m, user_id))
+
+# Remove the next step handler registration for handle_name
 
 def handle_name(message, user_id):
     user_data[user_id]['name'] = message.text
@@ -34,16 +35,8 @@ def handle_name(message, user_id):
     markup.add(item)
     bot.send_message(user_id, "Kontaktingizni yuboring:", reply_markup=markup)
     add_to_spreadsheet(user_id)
-    # bot.register_next_step_handler(message, lambda m: handle_contact(m, user_id))
 
-def handle_contact(message, user_id):
-    if message.contact:
-        user_data[user_id]['phone'] = message.contact.phone_number
-        add_to_spreadsheet(user_id)
-        bot.send_message(user_id, "Faylni olish uchun pastdagi tugmani bosing👇:", reply_markup=create_file_button())
-    else:
-        bot.send_message(user_id, "Iltimos kontaktni ulashish tugmasini bosing.")
-        return
+# Remove the next step handler registration for handle_contact
 
 def create_file_button():
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
@@ -71,7 +64,7 @@ def handle_file(message):
         # Remove the "📥 Yuklab olish" button
         remove_file_button(user_id)
     else:
-        bot.send_message(user_id, "File has already been sent!")
+        bot.send_message(user_id, "Allaqachon yukladingiz!")
 
 def remove_file_button(user_id):
     markup = types.ReplyKeyboardRemove(selective=False)
