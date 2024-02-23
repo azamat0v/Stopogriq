@@ -21,10 +21,10 @@ def handle_start(message):
     if user_id not in user_data:
         user_data[user_id] = {'start_count': 0}
     user_data[user_id]['start_count'] += 1
-    add_to_spreedsheet(user_id)
 
     user_data[user_id]['start_sent_time'] = datetime.now()
     bot.send_message(user_id, "Assalomu alaykum! Iltimos ismingizni kiriting:")
+    add_to_spreedsheet(user_id)
     bot.register_next_step_handler(message, lambda m: handle_name(m, user_id))
 
 def handle_name(message, user_id):
