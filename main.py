@@ -39,7 +39,7 @@ def handle_name(message):
     bot.register_next_step_handler(message, handle_contact, user_id)  # Pass user_id here
 
 def handle_contact(message, user_id):
-    user_data[user_id]['name'] = message.contact.first_name
+    user_data[user_id]['phone'] = contact.phone_number
 
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     item = types.KeyboardButton("📥 Yuklab olish", request_location=False)
