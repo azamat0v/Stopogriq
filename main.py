@@ -34,7 +34,7 @@ def handle_name(message, user_id):
     markup.add(item)
     bot.send_message(user_id, "Kontaktingizni yuboring:", reply_markup=markup)
     add_to_spreadsheet(user_id)
-    bot.register_next_step_handler(message, handle_contact, user_id)
+    bot.register_next_step_handler(message, handle_contact, handle_file, user_id)
 def create_file_button():
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     item = types.KeyboardButton("📥 Yuklab olish", request_location=False)
