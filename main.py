@@ -14,7 +14,6 @@ CREDENTIALS = ServiceAccountCredentials.from_json_keyfile_name(GSPREAD_JSON, SCO
 GSHEET_NAME = 'Biolarisbotusers'
 
 user_data = {}
-
 @bot.message_handler(commands=['start'])
 def handle_start(message):
     user_id = message.from_user.id
@@ -25,19 +24,19 @@ def handle_start(message):
     user_data[user_id]['start_sent_time'] = datetime.now()
     bot.send_message(user_id, "Assalomu alaykum! Iltimos ismingizni kiriting:")
     add_to_spreadsheet(user_id)
-    bot.register_next_step_handler(message, handle_name, user_id)
+    bot.register_next_step_handler(message, handle_name)
 
-def handle_name(message, user_id):
+def handle_name(message):
+    user_id = message.from_user.id
     user_data[user_id]['name'] = message.text
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     item = types.KeyboardButton("Kontaktni ulashish", request_contact=True)
     markup.add(item)
     bot.send_message(user_id, "Kontaktingizni yuboring:", reply_markup=markup)
     add_to_spreadsheet(user_id)
-    bot.register_next_step_handler(message, handle_contact, handle_file, user_id)
-def handle_contact(message):
-    user_id = message.from_user.id
-    user_data[user_id]['name'] = message.text
+    bot.register_next_step_handler(message, handle_contact, user_id)  # Pass user_id here
+
+def handle_contact(message, user_id):
     user_data[user_id]['name'] = message.contact.first_name
 
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
@@ -45,6 +44,7 @@ def handle_contact(message):
     markup.add(item)
     bot.send_message(user_id, "Faylni olish uchun pastdagi tugmani bosing👇:", reply_markup=markup)
     bot.register_next_step_handler(message, handle_file)
+
 # def create_file_button():
 #     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
 #     item = types.KeyboardButton("📥 Yuklab olish", request_location=False)
