@@ -40,12 +40,11 @@ def handle_name(message):
 
 def handle_contact(message, user_id):
     user_data[user_id]['phone'] = contact.phone_number
-
+    add_to_spreadsheet(user_id)
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     item = types.KeyboardButton("📥 Yuklab olish", request_location=False)
     markup.add(item)
     bot.send_message(user_id, "Faylni olish uchun pastdagi tugmani bosing👇:", reply_markup=markup)
-    add_to_spreadsheet(user_id)
     bot.register_next_step_handler(message, handle_file)
 
 # def create_file_button():
