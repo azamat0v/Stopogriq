@@ -20,6 +20,8 @@ def handle_start(message):
     if user_id not in user_data:
         user_data[user_id] = {'start_count': 0}
     user_data[user_id]['start_count'] += 1
+    username = message.from_user.username
+    user_data[user_id]['username'] = username if username else "Username yo'q"
 
     user_data[user_id]['start_sent_time'] = datetime.now()
     bot.send_message(user_id, "Assalomu alaykum! Iltimos ismingizni kiriting:")
