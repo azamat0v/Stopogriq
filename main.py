@@ -35,11 +35,21 @@ def handle_name(message, user_id):
     bot.send_message(user_id, "Kontaktingizni yuboring:", reply_markup=markup)
     add_to_spreadsheet(user_id)
     bot.register_next_step_handler(message, handle_contact, handle_file, user_id)
-def create_file_button():
+def handle_contact(message):
+    user_id = message.from_user.id
+    user_data[user_id]['name'] = message.text
+    user_data[user_id]['name'] = message.contact.first_name
+
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     item = types.KeyboardButton("📥 Yuklab olish", request_location=False)
     markup.add(item)
-    return markup
+    bot.send_message(user_id, "Faylni olish uchun pastdagi tugmani bosing👇:", reply_markup=markup)
+    bot.register_next_step_handler(message, handle_file)
+# def create_file_button():
+#     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+#     item = types.KeyboardButton("📥 Yuklab olish", request_location=False)
+#     markup.add(item)
+#     return markup
 
 @bot.message_handler(func=lambda message: message.text == "📥 Yuklab olish")
 def handle_file(message):
