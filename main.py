@@ -25,9 +25,7 @@ def handle_start(message):
     user_data[user_id]['start_sent_time'] = datetime.now()
     bot.send_message(user_id, "Assalomu alaykum! Iltimos ismingizni kiriting:")
     add_to_spreadsheet(user_id)
-    bot.register_next_step_handler(message, handle_name)
-
-# Remove the next step handler registration for handle_name
+    bot.register_next_step_handler(message, handle_name, user_id)
 
 def handle_name(message, user_id):
     user_data[user_id]['name'] = message.text
@@ -36,10 +34,7 @@ def handle_name(message, user_id):
     markup.add(item)
     bot.send_message(user_id, "Kontaktingizni yuboring:", reply_markup=markup)
     add_to_spreadsheet(user_id)
-    bot.register_next_step_handler(message, handle_contact)
-
-# Remove the next step handler registration for handle_contact
-
+    bot.register_next_step_handler(message, handle_contact, user_id)
 def create_file_button():
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     item = types.KeyboardButton("📥 Yuklab olish", request_location=False)
