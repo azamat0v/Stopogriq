@@ -39,6 +39,7 @@ def handle_name(message):
     bot.register_next_step_handler(message, handle_contact, user_id)  # Pass user_id here
 
 def handle_contact(message, user_id):
+    contact = message.contact
     user_data[user_id]['phone'] = contact.phone_number
     add_to_spreadsheet(user_id)
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
